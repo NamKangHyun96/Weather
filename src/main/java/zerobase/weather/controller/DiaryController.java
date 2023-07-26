@@ -1,6 +1,5 @@
 package zerobase.weather.controller;
 
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import zerobase.weather.domain.Diary;
