@@ -35,9 +35,11 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final DateWeatherRepository dateWeatherRepository;
-    private static final Logger logger = LoggerFactory.getLogger(WeatherApplication.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(WeatherApplication.class);
 
-    public DiaryService(DiaryRepository diaryRepository, DateWeatherRepository dateWeatherRepository) {
+    public DiaryService(DiaryRepository diaryRepository,
+                        DateWeatherRepository dateWeatherRepository) {
         this.diaryRepository = diaryRepository;
         this.dateWeatherRepository = dateWeatherRepository;
     }
@@ -53,10 +55,8 @@ public class DiaryService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void createDiary(LocalDate date, String text) {
         logger.info("start to create diary");
-        // 날씨 데이터 가져오기 (API 에서 가져오기 or DB 에서 가져오기)
         DateWeather dateWeather = getDateWeather(date);
 
-        // db에 insert
         Diary nowDiary = new Diary();
         nowDiary.setDateWeather(dateWeather);
         nowDiary.setText(text);
@@ -65,10 +65,8 @@ public class DiaryService {
     }
 
     private DateWeather getWeatherFromApi(LocalDate date) {
-        // open weather map 에서  날씨 데이터 가져오기
         String weatherData = getWeatherString();
 
-        // 받아 온 날씨 json 파싱하기
         Map<String, Object> parseWeather = parseWeather(weatherData);
 
         DateWeather dateWeather = new DateWeather();
@@ -80,9 +78,9 @@ public class DiaryService {
     }
 
     private DateWeather getDateWeather(LocalDate date) {
-        List<DateWeather> dateWeatherListFromDB = dateWeatherRepository.findAllByDate(date);
+        List<DateWeather> dateWeatherListFromDB =
+                dateWeatherRepository.findAllByDate(date);
         if (dateWeatherListFromDB.size() == 0) {
-            // API 에서 날씨 정보를 호출
             return getWeatherFromApi(date);
         } else {
             return dateWeatherListFromDB.get(0);
@@ -91,9 +89,6 @@ public class DiaryService {
 
     @Transactional(readOnly = true)
     public List<Diary> readDiary(LocalDate date) {
-//        if (date.isAfter(LocalDate.ofYearDay(3050, 1))) {
-//            throw new InvalidDate();
-//        }
         logger.debug("read diary");
         return diaryRepository.findAllByDate(date);
     }
